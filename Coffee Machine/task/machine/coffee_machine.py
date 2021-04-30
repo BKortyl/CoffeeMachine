@@ -9,38 +9,66 @@ def current_status():
 
 
 def menu():
-    pick = input('Write action (buy, fill, take): ')
-    if pick.lower() == 'buy':
-        action_buy()
-    elif pick.lower() == 'fill':
-        action_fill()
-    elif pick.lower() == 'take':
-        action_take()
+    while True:
+        pick = input('Write action (buy, fill, take, remaining, exit): ')
+        if pick.lower() == 'buy':
+            action_buy()
+        elif pick.lower() == 'fill':
+            action_fill()
+        elif pick.lower() == 'take':
+            action_take()
+        elif pick.lower() == 'remaining':
+            current_status()
+        elif pick.lower() == 'exit':
+            quit()
+        else:
+            print('Wrong input.')
+            menu()
+
+
+def compare_amount(machine, coffee):
+    lacking = []
+    for keys in machine:
+        if machine[keys] <= coffee[keys]:
+            lacking.append(keys)
+    if not bool(lacking):
+        return True
     else:
-        print('Wrong input.')
+        print(f'Sorry, not enough {lacking[0]}!')
         menu()
 
 
 def action_buy():
-    coffee = input('What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino: ')
+    coffee = input('What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back - to main menu: ')
     if coffee == '1':
+        if compare_amount(amount_in_machine, espresso):
+            print('I have enough resources, making you a coffee!')
         amount_in_machine['water'] -= espresso['water']
         amount_in_machine['milk'] -= espresso['milk']
         amount_in_machine['beans'] -= espresso['beans']
         amount_in_machine['cup'] -= espresso['cup']
         amount_in_machine['cash'] += espresso['cash']
     elif coffee == '2':
+        if compare_amount(amount_in_machine, latte):
+            print('I have enough resources, making you a coffee!')
         amount_in_machine['water'] -= latte['water']
         amount_in_machine['milk'] -= latte['milk']
         amount_in_machine['beans'] -= latte['beans']
         amount_in_machine['cup'] -= latte['cup']
         amount_in_machine['cash'] += latte['cash']
     elif coffee == '3':
+        if compare_amount(amount_in_machine, cappuccino):
+            print('I have enough resources, making you a coffee!')
         amount_in_machine['water'] -= cappuccino['water']
         amount_in_machine['milk'] -= cappuccino['milk']
         amount_in_machine['beans'] -= cappuccino['beans']
         amount_in_machine['cup'] -= cappuccino['cup']
         amount_in_machine['cash'] += cappuccino['cash']
+    elif coffee == 'back':
+        menu()
+    else:
+        print('Wrong input')
+        action_buy()
 
 
 def action_fill():
@@ -56,9 +84,7 @@ def action_take():
 
 
 def main():
-    current_status()
     menu()
-    current_status()
 
 
 if __name__ == '__main__':
